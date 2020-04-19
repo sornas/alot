@@ -247,6 +247,22 @@ class MoveFocusCommand(MoveCommand):
         else:
             MoveCommand.apply(self, ui)
 
+        with open("index.html", "w") as f:
+            thread = ui.current_buffer.get_selected_thread()
+
+            s = ""
+            s += "<body>\n"
+            s += "{} messages</br></br>\n".format(thread.get_total_messages())
+            s += "toplevel messages:</br>\n"
+            for msg in thread.get_toplevel_messages():
+                s += "{} ({}):</br>{}</br></br>\n".format(msg.get_author()[0], msg.get_author()[1], msg.get_body_text())
+            s += "</body>"
+
+            f.seek(0)
+            f.write(s)
+            f.truncate()
+            #logging.debug(' "{}"'.format(ui.current_buffer.get_selected_thread()))
+
 
 @registerCommand(
     MODE, 'savequery',
